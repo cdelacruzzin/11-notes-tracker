@@ -12,6 +12,9 @@ if (window.location.pathname === '/notes') {
   noteList = document.querySelectorAll('.list-container .list-group');
 }
 
+
+
+
 // Show an element
 const show = (elem) => {
   elem.style.display = 'inline';
@@ -53,7 +56,7 @@ const deleteNote = (id) =>
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
-  if (activeNote.id) {
+  if (activeNote.note_id) {
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
@@ -85,7 +88,7 @@ const handleNoteDelete = (e) => {
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
 
-  if (activeNote.id === noteId) {
+  if (activeNote.note_id === noteId) {
     activeNote = {};
   }
 
@@ -99,6 +102,7 @@ const handleNoteDelete = (e) => {
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  console.log(activeNote.note_id);
   renderActiveNote();
 };
 
@@ -118,7 +122,7 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
+  let jsonNotes = await notes.json();   //indicates that notes is a response onject, and we want to extract the JSONa adata from it.
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -126,18 +130,23 @@ const renderNoteList = async (notes) => {
   let noteListItems = [];
 
   // Returns HTML element with or without a delete button
-  const createLi = (text, delBtn = true) => {
+  const createLi = (title, text="", delBtn = true) => {   //accepts 2 parameters: text, and delBtn. delBtn has default value of true (if delBtn argument not provided, it will default to true).
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
 
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
-    spanEl.innerText = text;
-    spanEl.addEventListener('click', handleNoteView);
+    spanEl.innerText = title;  //creates a span with the 'text' argument as the span's inner text.
+    spanEl.addEventListener('click', handleNoteView);   //if span gets clicked, handleNoteView will be called.
+
+    const pText = document.createElement('p');
+    pText.classList.add('list-item-text');
+    pText.innerText = text;
 
     liEl.append(spanEl);
+    liEl.append(pText);
 
-    if (delBtn) {
+    if (delBtn) {   //adds a delete element if delBtn is true
       const delBtnEl = document.createElement('i');
       delBtnEl.classList.add(
         'fas',
@@ -159,7 +168,7 @@ const renderNoteList = async (notes) => {
   }
 
   jsonNotes.forEach((note) => {
-    const li = createLi(note.title);
+    const li = createLi(note.title, note.text);
     li.dataset.note = JSON.stringify(note);
 
     noteListItems.push(li);

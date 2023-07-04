@@ -25,7 +25,7 @@ notes.get('/:note_id', (req, res) => {
             : res.json('no note with that id');
         })
 });
-app.delete('/:note_id', (res, req) => {
+notes.delete('/:note_id', (req, res) => {
     //assigns the note id of the request to the const noteId
     const noteId = req.params.note_id;
 
@@ -38,7 +38,6 @@ app.delete('/:note_id', (res, req) => {
             
             //overwrites the database file with the newly created array
             writeToFile('./db/db.json', result);
-
             res.json(`Note ${noteId} has been deleted from the database`);
         });
 });

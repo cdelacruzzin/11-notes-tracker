@@ -1,7 +1,8 @@
-const fs = require('fs');
-const util = require('util');
+const fs = require('fs');   // imports fs
+const util = require('util');   //imports util
 
-const readFromFile = util.promisify(fs.readFile);
+const readFromFile = util.promisify(fs.readFile);   //util.promisify turns the call back of fs.readFile into a promise.
+// fs.readFile is a function that reads a file and provides its contents into a callback.
 
 
 const writeToFile = (destination, content) => {

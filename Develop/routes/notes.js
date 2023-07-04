@@ -6,6 +6,8 @@ const {
     writeToFile,
 } = require('../helpers/fsUtils');
 
+
+//get method to get all notes from db.json
 notes.get('/', (req, res) => {
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 });
@@ -23,8 +25,26 @@ notes.get('/:note_id', (req, res) => {
             : res.json('no note with that id');
         })
 });
+app.delete('/:note_id', (res, req) => {
+    //assigns the note id of the request to the const noteId
+    const noteId = req.params.note_id;
+
+    //reads from the database file
+    readFromFile('./db/db.json')
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            // creates a new filtered array of note id's in the database that does not match the requested note id
+            const result = json.filter((note) => note.note_id !== noteId);
+            
+            //overwrites the database file with the newly created array
+            writeToFile('./db/db.json', result);
+
+            res.json(`Note ${noteId} has been deleted from the database`);
+        });
+});
 
 
+//mehod to post a note to db.json
 notes.post('/', (req, res) => {
     const { title, text } = req.body;
 

@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const api = require('./routes/index');
 
-const port = 3003;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.json()); //express.json() middleware parses incoming JSON payloads from HTTPS requests into js objects. via req.body
@@ -23,6 +23,6 @@ app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/404.html'))
 );
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port} 🚀`);
+app.listen(PORT, () => {
+    console.log(`App listening at http://localhost:${PORT} 🚀`);
 })
